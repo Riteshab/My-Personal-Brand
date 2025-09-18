@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Page Title -->
-    <title>Ritesh Patel | Business Analyst, AI Consultant & Content Creator</title>
+    <title>Ritesh Patel | I fix the tech mess that's bleeding your profits dry </title>
     <!-- Tailwind CSS CDN for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts for a clean, professional look -->
@@ -185,7 +185,7 @@
                     <p class="text-gray-600 text-sm mt-2 leading-relaxed">
                         A brief description of your project. Mention the technologies used and the key features. This is a great place to showcase your skills.
                     </p>
-                    <a href="#" class="inline-block mt-4 text-teal-600 hover:text-gray-900 font-medium transform transition-transform hover:translate-x-1">Learn More &rarr;</a>
+                    <a href="#" class="inline-block mt-4 text-teal-600 hover:text-gray-900 font-medium transform transition-transform hover:translate-x-1">Listen Now &rarr;</a>
                 </div>
             </div>
         </div>
@@ -268,7 +268,7 @@
     <section id="contact" class="py-20">
         <div class="container mx-auto px-6">
             <h2 class="text-4xl font-bold text-center mb-16 text-gray-900">Inquiry Form</h2>
-            <div class="max-w-xl mx-auto card rounded-2xl shadow-lg p-10">
+            <div id="form-container" class="max-w-xl mx-auto card rounded-2xl shadow-lg p-10">
                 <!-- Direct contact details -->
                 <div class="mb-8 text-center">
                     <p class="text-lg font-bold text-gray-800">Contact me directly at:</p>
@@ -276,7 +276,7 @@
                     <a href="mailto:patel95.ritesh@gmail.com" class="block text-teal-600 font-semibold mt-1 hover:underline">patel95.ritesh@gmail.com</a>
                 </div>
                 <!-- Form structure using Formspree -->
-                <form action="https://formspree.io/f/mqkvpnyq" method="POST">
+                <form id="contact-form" action="https://formspree.io/f/mqkvpnyq" method="POST">
                     <!-- Name Input Field -->
                     <div class="mb-6">
                         <label for="name" class="block text-gray-600 font-medium mb-2">Your Name</label>
@@ -340,6 +340,63 @@
             </div>
         </div>
     </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('contact-form');
+            const formContainer = document.getElementById('form-container');
+
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault(); // Prevent the default form submission that reloads the page
+
+                // Serialize form data
+                const formData = new FormData(form);
+                const object = {};
+                formData.forEach((value, key) => object[key] = value);
+                const json = JSON.stringify(object);
+
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: json,
+                    });
+
+                    if (response.ok) {
+                        // Success: Show thank you message
+                        formContainer.innerHTML = `
+                            <div class="text-center p-8">
+                                <span class="text-6xl mb-4 block animate-bounce" role="img" aria-label="smiling emoji">😊</span>
+                                <h3 class="text-2xl font-bold text-gray-900 mb-2">Thank you!</h3>
+                                <p class="text-gray-600">Your message has been sent successfully. I'll get back to you as soon as possible.</p>
+                            </div>
+                        `;
+                    } else {
+                        // Error: Show a message to the user
+                        const data = await response.json();
+                        formContainer.innerHTML = `
+                            <div class="text-center p-8">
+                                <span class="text-6xl mb-4 block" role="img" aria-label="sad emoji">😔</span>
+                                <h3 class="text-2xl font-bold text-red-600 mb-2">Oops! Something went wrong.</h3>
+                                <p class="text-gray-600">Please try again later. Error: ${data.errors ? data.errors.map(err => err.message).join(', ') : 'Unknown'}</p>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    console.error('Error submitting form:', error);
+                    formContainer.innerHTML = `
+                        <div class="text-center p-8">
+                            <span class="text-6xl mb-4 block" role="img" aria-label="sad emoji">😔</span>
+                            <h3 class="text-2xl font-bold text-red-600 mb-2">Oops! Something went wrong.</h3>
+                            <p class="text-gray-600">Please check your internet connection and try again.</p>
+                        </div>
+                    `;
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>
